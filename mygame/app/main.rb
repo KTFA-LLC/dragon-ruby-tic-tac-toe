@@ -1,11 +1,11 @@
 require "app/gameboard-configurator.rb"
 require "app/gameplay.rb"
 require "app/menu.rb"
-require "app/minimax.rb"
+require "app/online.rb"
 
 def ai_tick args
   make_board(args)
-  game_condition = play args
+  game_condition = play args 
   unless game_condition || args.state.current_player == 'o'
     place_pieces(args)
   else
@@ -36,14 +36,6 @@ def local_tick args
   end
 end
 
-def online_tick args
-  game_condition = play args 
-  place_pieces(args) unless game_condition
-  args.outputs.sprites << args.state.board.map do |box|
-    box.player 
-  end
-end
-
 def game_over_tick args
   args.outputs.labels << [640, 360, "Player #{args.state.condition.upcase} wins!", 10, 1, 255, 255, 255 ] unless args.state.condition == 'draw'
   args.outputs.labels << [640, 360, "It's a draw!", 10, 1, 255, 255, 255] if args.state.condition == 'draw'
@@ -55,6 +47,18 @@ end
 
 def menu_tick args
   do_menu_tick args
+end
+
+def create_online_tick args
+  do_create_online_tick args
+end
+
+def join_online_tick args
+  do_join_online_tick args
+end
+
+def online_tick args
+  do_online_tick args
 end
 
 def tick args
